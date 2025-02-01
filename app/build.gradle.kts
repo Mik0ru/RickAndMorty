@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.compose.compiler)
+    kotlin("plugin.serialization") version "2.1.0"
 }
 
 android {
@@ -21,6 +23,9 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField("String", "BASE_URL", "\"https://rickandmortyapi.com/api/\"")
+        }
         release {
             isMinifyEnabled = false
             proguardFiles(
@@ -38,6 +43,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -50,6 +56,16 @@ android {
 }
 
 dependencies {
+
+    //koin
+    implementation(libs.koin.androidx.compose)
+
+    //coroutines
+    implementation(libs.kotlinx.coroutines.android)
+
+    // retrofit
+    implementation (libs.retrofit)
+    implementation (libs.converter.gson)
 
     implementation (libs.glide.compose)
     implementation(libs.kotlinx.serialization.json)

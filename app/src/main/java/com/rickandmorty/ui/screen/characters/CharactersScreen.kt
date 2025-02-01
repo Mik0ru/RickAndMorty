@@ -1,4 +1,4 @@
-package com.rickandmorty.ui.screen.main
+package com.rickandmorty.ui.screen.characters
 import com.rickandmorty.data.models.Character
 
 import androidx.compose.runtime.Composable
@@ -14,83 +14,30 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.rickandmorty.ui.navRoute.Screen
+import com.rickandmorty.data.remote.response.CharacterResponse
+import com.rickandmorty.ui.nav.navRoute.Screen
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun CharactersScreen(navController: NavHostController) {
-    val characters = listOf(
-       Character(
-            "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
-            "Rick Sanchez",
-            "Alive",
-            "Human",
-            "Male",
-            "Earth (C-137)"
-        ),
-        Character(
-            "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
-            "Morty Smith",
-            "Alive",
-            "Human",
-            "Male",
-            "Earth (C-137)"
-        ),
-        Character(
-            "https://rickandmortyapi.com/api/character/avatar/3.jpeg",
-            "Summer Smith",
-            "Alive",
-            "Human",
-            "Female",
-            "Earth (C-137)"
-        ),
-        Character(
-            "https://rickandmortyapi.com/api/character/avatar/4.jpeg",
-            "Beth Smith",
-            "Alive",
-            "Human",
-            "Female",
-            "Earth (C-137)"
-        ),
-        Character(
-            "https://rickandmortyapi.com/api/character/avatar/5.jpeg",
-            "Jerry Smith",
-            "Alive",
-            "Human",
-            "Male",
-            "Earth (C-137)"
-        ),
+fun CharactersScreen(
+    navController: NavHostController,
+    charactersViewModel: CharactersViewModel = koinViewModel<CharactersViewModel>()
+) {
+    val characters = charactersViewModel.charactersFlow.collectAsState()
 
-        Character(
-            "https://rickandmortyapi.com/api/character/avatar/6.jpeg",
-            "Abadango Cluster Princess",
-            "Alive",
-            "Alien",
-            "Female",
-            "Abadango"
-        ),
-        Character(
-            "https://rickandmortyapi.com/api/character/avatar/7.jpeg",
-            "Abradolf Lincler",
-            "Dead",
-            "Human",
-            "Male",
-            "Earth (Replacement Dimension)"
-        ),
-        Character(
-            "https://rickandmortyapi.com/api/character/avatar/8.jpeg",
-            "Adjudicator Rick",
-            "Alive",
-            "Human",
-            "Male",
-            "Citadel of Ricks"
-        )
-    )
+    LaunchedEffect(Unit) {
+        charactersViewModel.getCharacters()
+    }
+
+
     Column(
         Modifier
             .background(Color.White)
@@ -102,28 +49,24 @@ fun CharactersScreen(navController: NavHostController) {
                 .padding(top = 16.dp, start = 16.dp, end = 16.dp)
         ){
             items(
-                items = characters
+                items = characters.value ?: emptyList(),
             ) { character ->
                 CharacterCard(
-                    character = character
+                    character = character,
                 ) {
                     navController.navigate(
                         Screen.CharacterDetail(
-                        character.imageUrl,
-                        character.name,
-                        character.status,
-                        character.species,
-                        character.gender,
-                        character.location
-                    ))
+                            character.id
+                        ))
                 }
             }
         }
     }
 }
+
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun CharacterCard(character: Character, onClick: () -> Unit) {
+fun CharacterCard(character: CharacterResponse, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .padding(bottom = 16.dp)
@@ -137,7 +80,7 @@ fun CharacterCard(character: Character, onClick: () -> Unit) {
                 .fillMaxWidth()
         ) {
             GlideImage(
-                model = character.imageUrl,
+                model = character.image,
                 contentDescription = "image",
                 modifier = Modifier
                     .clickable {
