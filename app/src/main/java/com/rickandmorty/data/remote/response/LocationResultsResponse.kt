@@ -3,6 +3,9 @@ package com.rickandmorty.data.remote.response
 import com.google.gson.annotations.SerializedName
 
 data class LocationResultsResponse(
+    @SerializedName("info")
+    val info: PagingInfo,
+
     @SerializedName("results")
     val results: List<LocationResponse>
 )

@@ -14,10 +14,10 @@ class FavoritesViewModel(
     private var _favoritesFlow = MutableStateFlow<List<CharacterEntity>?>(emptyList())
     val favoritesFlow = _favoritesFlow.asStateFlow()
 
-    fun insert(character: CharacterEntity) = viewModelScope.launch {
+    private fun insert(character: CharacterEntity) = viewModelScope.launch {
         dao.insert(character)
     }
-    fun delete(id: Int) = viewModelScope.launch {
+    private fun delete(id: Int) = viewModelScope.launch {
         dao.delete(id)
     }
     fun getFavorites() = viewModelScope.launch {

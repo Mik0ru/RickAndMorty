@@ -58,6 +58,10 @@ android {
 
 dependencies {
 
+    //paging
+    implementation(libs.androidx.paging.runtime.ktx)
+    implementation(libs.androidx.paging.compose)
+
     implementation(project.dependencies.platform(libs.koin.bom))
 
     // Koin Core

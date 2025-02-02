@@ -5,11 +5,14 @@ import com.rickandmorty.data.remote.response.EpisodeResultsResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface EpisodeApiService {
 
     @GET("episode")
-    suspend fun getAllEpisodes(): Response<EpisodeResultsResponse>
+    suspend fun getAllEpisodes(
+        @Query("page") page: Int
+    ): Response<EpisodeResultsResponse>
 
     @GET("episode/{id}")
     suspend fun getEpisodeById(@Path("id") id: Int): Response<EpisodeResponse>
