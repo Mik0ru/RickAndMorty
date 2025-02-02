@@ -1,6 +1,9 @@
 package com.rickandmorty.data.serviceLocator
 
+import android.app.Application
+import androidx.room.Room
 import com.rickandmorty.BuildConfig
+import com.rickandmorty.data.local.database.AppDatabase
 import com.rickandmorty.data.remote.api.CharacterApiService
 import com.rickandmorty.data.remote.api.EpisodeApiService
 import com.rickandmorty.data.remote.api.LocationApiService
@@ -23,6 +26,8 @@ val dataModule = module {
 
     single { get<Retrofit>().create(EpisodeApiService::class.java) }
     single { EpisodeRepository(get()) }
+    single { provideDatabase(get()) }
+    single { provideFavoritesDao(get()) }
 
 }
 fun provideRetrofit(): Retrofit {
@@ -31,3 +36,13 @@ fun provideRetrofit(): Retrofit {
         .addConverterFactory(GsonConverterFactory.create())
         .build()
 }
+fun provideDatabase(application: Application) : AppDatabase {
+    return Room.databaseBuilder(
+        application.applicationContext,
+        AppDatabase::class.java,
+        "favorites_database"
+    ).
+    fallbackToDestructiveMigration().build()
+}
+
+fun provideFavoritesDao(database: AppDatabase) = database.favoritesDao()

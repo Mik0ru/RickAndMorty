@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
     kotlin("plugin.serialization") version "2.1.0"
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -57,8 +58,25 @@ android {
 
 dependencies {
 
-    //koin
-    implementation(libs.koin.androidx.compose)
+    implementation(project.dependencies.platform(libs.koin.bom))
+
+    // Koin Core
+    implementation("io.insert-koin:koin-core:4.1.0-Beta5")
+
+    // Koin for Android
+    implementation("io.insert-koin:koin-android:4.1.0-Beta5")
+
+    // Koin for Android Compose (if you're using Compose)
+    implementation("io.insert-koin:koin-androidx-compose:4.1.0-Beta5")
+
+    // Koin for ViewModel (if you're using ViewModels)
+    implementation("io.insert-koin:koin-androidx-viewmodel:4.1.0-Beta5")
+
+    //room
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler.v250)
+
 
     //coroutines
     implementation(libs.kotlinx.coroutines.android)

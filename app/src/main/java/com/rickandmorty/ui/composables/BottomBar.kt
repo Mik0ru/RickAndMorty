@@ -1,4 +1,4 @@
-package com.rickandmorty.ui.nav
+package com.rickandmorty.ui.composables
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.width

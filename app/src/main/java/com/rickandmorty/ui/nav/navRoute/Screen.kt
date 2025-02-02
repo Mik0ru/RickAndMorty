@@ -8,6 +8,9 @@ object Screen {
     object Characters
 
     @Serializable
+    object Favorites
+
+    @Serializable
     object Episodes
 
     @Serializable

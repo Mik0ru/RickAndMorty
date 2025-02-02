@@ -1,5 +1,4 @@
 package com.rickandmorty.ui.screen.characters
-import com.rickandmorty.data.models.Character
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
@@ -23,20 +22,24 @@ import androidx.compose.ui.unit.sp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.rickandmorty.data.remote.response.CharacterResponse
+import com.rickandmorty.ui.composables.CharacterCard
 import com.rickandmorty.ui.nav.navRoute.Screen
+import com.rickandmorty.ui.screen.characters.favorites.FavoritesViewModel
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CharactersScreen(
     navController: NavHostController,
-    charactersViewModel: CharactersViewModel = koinViewModel<CharactersViewModel>()
+    charactersViewModel: CharactersViewModel = koinViewModel<CharactersViewModel>(),
+    favoritesViewModel: FavoritesViewModel = koinViewModel<FavoritesViewModel>()
 ) {
-    val characters = charactersViewModel.charactersFlow.collectAsState()
-
-    LaunchedEffect(Unit) {
+    LaunchedEffect(key1 = Unit) {
         charactersViewModel.getCharacters()
+        favoritesViewModel.getFavorites()
     }
 
+    val favorites = favoritesViewModel.favoritesFlow.collectAsState()
+    val characters = charactersViewModel.charactersFlow.collectAsState()
 
     Column(
         Modifier
@@ -51,8 +54,11 @@ fun CharactersScreen(
             items(
                 items = characters.value ?: emptyList(),
             ) { character ->
+                val isFavorite = favorites.value?.any { it.characterId == character.id } ?: false
                 CharacterCard(
-                    character = character,
+                    character = character.toCharacterEntity(),
+                    favoritesViewModel = favoritesViewModel,
+                    isFavorite = isFavorite,
                 ) {
                     navController.navigate(
                         Screen.CharacterDetail(
@@ -61,48 +67,5 @@ fun CharactersScreen(
                 }
             }
         }
-    }
-}
-
-@OptIn(ExperimentalGlideComposeApi::class)
-@Composable
-fun CharacterCard(character: CharacterResponse, onClick: () -> Unit) {
-    Card(
-        modifier = Modifier
-            .padding(bottom = 16.dp)
-            .clickable{
-                onClick()
-            }
-    ) {
-        Row(
-            modifier = Modifier
-                .padding(end = 24.dp)
-                .fillMaxWidth()
-        ) {
-            GlideImage(
-                model = character.image,
-                contentDescription = "image",
-                modifier = Modifier
-                    .clickable {
-                        onClick()
-                    }
-            )
-
-            Column (
-                modifier = Modifier
-                    .padding(start = 16.dp, top = 12.dp)
-            ) {
-                Text(
-                    fontSize = 28.sp,
-                    text = character.name
-                )
-                Text(
-                    text = character.status,
-                    modifier = Modifier
-                        .padding(top = 4.dp)
-                )
-            }
-        }
-
     }
 }

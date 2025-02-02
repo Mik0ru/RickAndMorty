@@ -1,6 +1,7 @@
 package com.rickandmorty.data.remote.response
 
 import com.google.gson.annotations.SerializedName
+import com.rickandmorty.data.local.models.CharacterEntity
 
 data class CharacterResultsResponse(
     @SerializedName("results")
@@ -21,4 +22,13 @@ data class CharacterResponse(
     val location: LocationResponse,
     @SerializedName("image")
     val image: String
-)
+) {
+    fun toCharacterEntity(): CharacterEntity {
+        return CharacterEntity(
+            characterId = id,
+            name = name,
+            status = status,
+            image = image
+        )
+    }
+}

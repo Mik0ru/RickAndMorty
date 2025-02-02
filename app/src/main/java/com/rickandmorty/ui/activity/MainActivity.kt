@@ -15,9 +15,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.rickandmorty.ui.nav.navRoute.Screen
-import com.rickandmorty.ui.nav.BottomBar
-import com.rickandmorty.ui.nav.NavHostInit
-import com.rickandmorty.ui.nav.TopBar
+import com.rickandmorty.ui.composables.BottomBar
+import com.rickandmorty.ui.composables.NavHostInit
+import com.rickandmorty.ui.composables.TopBar
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +43,7 @@ fun MainScreen(navController: NavHostController) {
 
     Scaffold(
         topBar = {
-            if (showTopBarAndBottomBar) TopBar(currentDestination)
+            if (showTopBarAndBottomBar) TopBar(currentDestination, navController)
         },
         bottomBar = {
             if (showTopBarAndBottomBar) BottomBar(navController)

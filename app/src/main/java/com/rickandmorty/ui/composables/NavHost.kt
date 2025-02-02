@@ -1,4 +1,4 @@
-package com.rickandmorty.ui.nav
+package com.rickandmorty.ui.composables
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -9,6 +9,7 @@ import com.rickandmorty.ui.screen.characters.detail.CharacterDetailScreen
 import com.rickandmorty.ui.screen.episodes.detail.EpisodeDetailScreen
 import com.rickandmorty.ui.screen.locations.detail.LocationDetailScreen
 import com.rickandmorty.ui.screen.characters.CharactersScreen
+import com.rickandmorty.ui.screen.characters.favorites.FavoritesScreen
 import com.rickandmorty.ui.screen.episodes.EpisodesScreen
 import com.rickandmorty.ui.screen.locations.LocationsScreen
 
@@ -19,6 +20,9 @@ fun NavHostInit(navController: NavHostController){
 
         composable<Screen.Characters> {
             CharactersScreen(navController)
+        }
+        composable<Screen.Favorites> {
+            FavoritesScreen(navController)
         }
         composable<Screen.CharacterDetail> {
             val args = it.toRoute<Screen.CharacterDetail>()

@@ -1,6 +1,5 @@
 package com.rickandmorty.ui.screen.characters.detail
 
-import com.rickandmorty.data.models.Character
 import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
